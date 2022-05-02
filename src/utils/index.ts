@@ -1,3 +1,4 @@
+
 export const validateEmail = (email: string) => {
   const matchResult = String(email)
     .toLowerCase()

@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(userRouter);
 
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
