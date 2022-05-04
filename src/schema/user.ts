@@ -5,19 +5,9 @@ const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: {
     type: String,
-    trim: true,
-    index: {
-      unique: true,
-      partialFilterExpression: { email: { $type: "string" } },
-    },
   },
   mobile: {
     type: String,
-    trim: true,
-    index: {
-      unique: true,
-      partialFilterExpression: { email: { $type: "string" } },
-    },
   },
   password: { type: String, required: true },
   avatar: {
