@@ -3,13 +3,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import morgan from "morgan";
-import userRouter from "./routes/user";
-import imageUploadRouter from "./routes/imageUpload";
 import { connect } from "mongoose";
 import http from "http";
 const { Server } = require("socket.io");
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+
+
+import userRouter from "./routes/user";
+import imageUploadRouter from "./routes/imageUpload";
+
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -28,6 +31,10 @@ app.use(imageUploadRouter);
 app.use(express.json());
 app.use(userRouter);
 app.use("/assets", express.static(path.join(__dirname, "..", "public")));
+
+
+
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
