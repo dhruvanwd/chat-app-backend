@@ -1,0 +1,4 @@
+1. add authentication
+2. re-configure state redux on reload
+3. add profile page.
+4. complete chat feature
