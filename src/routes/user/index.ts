@@ -1,28 +1,16 @@
 import { Router } from "express";
-import { validateEmail, validateMobile } from "../utils";
-import { User } from "../schema/user";
+import { validateEmail, validateMobile } from "../../utils";
+import { User } from "../../schema/user";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
+import { validateUsername } from "./validateUsername";
 
 const router = Router();
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", validateUsername, async (req, res) => {
   console.log(req.body);
-  const { name, username, password } = req.body;
-  const userObj: any = {
-    name,
-    password,
-  };
-  if (validateEmail(username)) {
-    userObj.email = username;
-  } else if (validateMobile(username)) {
-    userObj.mobile = username;
-  }
-  console.log(userObj);
-  if (!userObj.email && !userObj.mobile) {
-    res.status(400).send("Invalid username");
-    return;
-  }
+  const { name, userObj, password } = req.body;
+
   try {
     if (!process.env.SALT) {
       throw new Error("SALT is not defined");
@@ -34,6 +22,7 @@ router.post("/signup", async (req, res) => {
     if (!hashedPassword) {
       throw new Error("Hashing failed");
     }
+    userObj.name = name;
     console.log("hashedPassword:", hashedPassword);
     userObj.password = hashedPassword;
     userObj.channelName = uuidv4();
@@ -49,18 +38,9 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const userObj: any = {};
-  if (validateEmail(username)) {
-    userObj.email = username;
-  } else if (validateMobile(username)) {
-    userObj.mobile = username;
-  }
+router.post("/login", validateUsername, async (req, res) => {
+  const { password, userObj } = req.body;
 
-  if (!userObj.email && !userObj.mobile) {
-    res.status(400).send("Invalid username");
-  }
   try {
     const userRes = await User.findOne(userObj);
     if (userRes) {
@@ -87,21 +67,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/available-username", async (req, res) => {
-  const { username } = req.body;
-  const userObj: any = {};
-  if (validateEmail(username)) {
-    userObj.email = username;
-  } else if (validateMobile(username)) {
-    userObj.mobile = username;
-  }
+router.post("/available-username", validateUsername, async (req, res) => {
+  const { userObj } = req.body;
 
-  if (!userObj.email && !userObj.mobile) {
-    res.status(400).send({
-      error: "Invalid username",
-      isAvailable: false,
-    });
-  }
   try {
     const userRes = await User.findOne(userObj);
     if (userRes) {
@@ -122,21 +90,8 @@ router.post("/available-username", async (req, res) => {
   }
 });
 
-router.post("/gen-otp", async (req, res) => {
-  const { username } = req.body;
-  const userObj: any = {};
-  if (validateEmail(username)) {
-    userObj.email = username;
-  } else if (validateMobile(username)) {
-    userObj.mobile = username;
-  }
-  if (!userObj.email && !userObj.mobile) {
-    res.status(400).send({
-      error: "Invalid username",
-      isAvailable: false,
-    });
-  }
-
+router.post("/gen-otp", validateUsername, async (req, res) => {
+  const { userObj } = req.body;
   try {
     const userRes = await User.findOne(userObj);
     if (userRes) {
@@ -158,21 +113,8 @@ router.post("/gen-otp", async (req, res) => {
   }
 });
 
-router.post("/change-password", async (req, res) => {
-  const { username, password } = req.body;
-  const userObj: any = {};
-  if (validateEmail(username)) {
-    userObj.email = username;
-  } else if (validateMobile(username)) {
-    userObj.mobile = username;
-  }
-  if (!userObj.email && !userObj.mobile) {
-    res.status(400).send({
-      error: "Invalid username",
-      isAvailable: false,
-    });
-  }
-
+router.post("/change-password", validateUsername, async (req, res) => {
+  const { userObj, password } = req.body;
   try {
     const userRes = await User.findOne(userObj);
     if (userRes) {
