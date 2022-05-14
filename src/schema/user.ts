@@ -13,6 +13,11 @@ const userSchema = new Schema<IUser>({
   avatar: {
     type: String,
   },
+  channelName: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
 // 3. Create a Model.

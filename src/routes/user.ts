@@ -2,6 +2,7 @@ import { Router } from "express";
 import { validateEmail, validateMobile } from "../utils";
 import { User } from "../schema/user";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
 
 const router = Router();
 
@@ -35,6 +36,7 @@ router.post("/signup", async (req, res) => {
     }
     console.log("hashedPassword:", hashedPassword);
     userObj.password = hashedPassword;
+    userObj.channelName = uuidv4();
     const userRes = await User.create(userObj);
     const userData = userRes.toJSON();
     delete userData.password;
@@ -197,6 +199,26 @@ router.post("/change-password", async (req, res) => {
     res.status(500).send({
       error: error.message,
     });
+  }
+});
+
+router.put("/update-profile/:_id", async (req, res) => {
+  const { _id } = req.params;
+  const updateInfo = req.body;
+  const userRes = await User.findOne({
+    _id,
+  });
+  console.log(userRes);
+
+  if (!userRes) {
+    res.status(400).send({
+      error: "User not found",
+    });
+  } else {
+    const updatedUser = await User.updateOne({ _id }, updateInfo, {
+      new: true,
+    });
+    res.status(200).send(updatedUser);
   }
 });
 

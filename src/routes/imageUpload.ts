@@ -27,7 +27,7 @@ router.post("/upload", upload.single("file"), (req, res) => {
     console.log("file received");
     return res.send({
       success: true,
-      fileData: req.file
+      fileData: req.file,
     });
   }
 });
