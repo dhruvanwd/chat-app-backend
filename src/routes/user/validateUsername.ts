@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validateMobile } from "../../utils";
 import { validateEmail } from "../../utils";
 
