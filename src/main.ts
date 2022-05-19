@@ -9,10 +9,9 @@ const { Server } = require("socket.io");
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 
-
 import userRouter from "./routes/user";
 import imageUploadRouter from "./routes/imageUpload";
-
+import contactRouter from "./routes/connection";
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -30,10 +29,8 @@ app.use(cors());
 app.use(imageUploadRouter);
 app.use(express.json());
 app.use(userRouter);
+app.use(contactRouter);
 app.use("/assets", express.static(path.join(__dirname, "..", "public")));
-
-
-
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
