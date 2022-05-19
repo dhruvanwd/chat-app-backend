@@ -1,16 +1,16 @@
-import { Contact } from "../../schema/contact";
+import { Connection } from "../../schema/connection";
 
 import { Request, Response } from "express";
 
 export default async (req: Request, res: Response) => {
-  const contact = req.body;
-  const contactId = req.params._id;
-  const updatedContactResp = await Contact.findByIdAndUpdate(
-    contactId,
+  const connection = req.body;
+  const connectionId = req.params._id;
+  const updatedConnectionResp = await Connection.findByIdAndUpdate(
+    connectionId,
     {
-      $set: contact,
+      $set: connection,
     },
     { new: true, upsert: true }
   );
-  res.status(200).send(updatedContactResp.toJSON());
+  res.status(200).send(updatedConnectionResp.toJSON());
 };

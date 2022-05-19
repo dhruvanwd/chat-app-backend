@@ -1,10 +1,13 @@
 import { Router } from "express";
-import addContact from "./create";
-import updateContact from "./update";
+
+import addConnection from "./create";
+import fetchConnection from "./fetchConnection";
+import updateConnection from "./update";
 
 const router = Router();
 
-router.post("/add-contact", addContact);
-router.put("/update-contact/:_id", updateContact);
+router.get("/connections", fetchConnection);
+router.post("/add-connection", addConnection);
+router.put("/update-connection/:_id", updateConnection);
 
 export default router;

@@ -7,7 +7,7 @@ export interface IUser {
   avatar?: string;
 }
 
-export interface IContact {
+export interface IConnection {
   initiatorId: string;
   receiverId: string;
   receiverChannelName: string;
