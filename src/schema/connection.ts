@@ -5,6 +5,7 @@ const connectionSchema = new Schema<IConnection>({
   initiatorId: { type: String, required: true },
   receiverId: { type: String, required: true },
   receiverChannelName: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 // 3. Create a Model.

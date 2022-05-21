@@ -11,4 +11,5 @@ export interface IConnection {
   initiatorId: string;
   receiverId: string;
   receiverChannelName: string;
+  createdAt: Date;
 }
