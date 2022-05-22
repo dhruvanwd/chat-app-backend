@@ -25,13 +25,14 @@ const io = new Server(server, {
 const port = process.env.PORT;
 const dbUrl = "mongodb://localhost:27017/chatApp";
 
+app.use("/assets", express.static(path.join(__dirname, "..", "public")));
+
 app.use(morgan("dev"));
 app.use(cors());
 app.use(imageUploadRouter);
 app.use(express.json());
 app.use(userRouter);
 app.use(verifyToken, contactRouter);
-app.use("/assets", express.static(path.join(__dirname, "..", "public")));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");

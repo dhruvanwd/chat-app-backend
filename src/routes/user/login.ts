@@ -8,7 +8,7 @@ export default async (req: Request, res: Response) => {
   const { password, userObj } = req.body;
 
   try {
-    const userRes = await User.findOne(userObj);
+    const userRes = await User.findOne(userObj, { __v: 0 });
     if (userRes) {
       const match = await bcrypt.compare(password, userRes.password);
       if (match) {

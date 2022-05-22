@@ -8,8 +8,8 @@ export interface IUser {
 }
 
 export interface IConnection {
-  initiatorId: string;
-  receiverId: string;
-  receiverChannelName: string;
+  participants:[string, string];
+  connectionId: string;
   createdAt: Date;
+  createdBy: string;
 }
