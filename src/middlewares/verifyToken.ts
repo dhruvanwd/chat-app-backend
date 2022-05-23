@@ -1,6 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { User } from "../schema/user";
 
 export const verifyToken = async (
   req: any,
