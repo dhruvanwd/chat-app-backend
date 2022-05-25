@@ -10,6 +10,9 @@ export interface IUser {
 export interface IConnection {
   participants: [string, string];
   connectionId: string;
+  groupAvatar?: string;
   createdAt: Date;
+  groupName?: string;
+  connectionType: "one-to-one" | "one-to-many" | "many-to-many";
   createdBy: string;
 }

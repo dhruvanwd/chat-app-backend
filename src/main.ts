@@ -43,12 +43,22 @@ io.on("connection", (socket: any) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
-  socket.on("message", (msg: string, callBack: any) => {
+  socket.on("message", (msg: any, callBack: any) => {
     console.log(callBack);
-    console.log("message: " + msg);
+    console.log("message: ", msg);
+    console.log(msg["chatId"]);
+    const chatId = uuidv4();
+    if (msg.connectionType == "one-to-one") {
+      console.table(msg);
+      io.emit(msg["receiverChannel"], { ...msg, isOwner: false, id: chatId });
+    }else {
+      for (const channel of msg["receipientChannels"]) {
+        io.emit(channel, { ...msg, isOwner: false, id: chatId });
+      }
+    }
     callBack({
       message: `Delivered Successful`,
-      id: uuidv4(),
+      id: chatId,
     });
   });
 });

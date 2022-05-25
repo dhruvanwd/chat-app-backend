@@ -8,17 +8,22 @@ export const verifyToken = async (
 ) => {
   const authHeader = req.headers["authorization"];
 
-  if (
-    req.headers &&
-    authHeader &&
-    authHeader.split(" ")[0] === "Bearer"
-  ) {
-    const decode: any = jwt.verify(
-      authHeader.split(" ")[1],
-      process.env.JWT_API_SECRET
-    );
-    req.user = decode;
-    next();
+  if (req.headers && authHeader && authHeader.split(" ")[0] === "Bearer") {
+    try {
+      const decode: any = jwt.verify(
+        authHeader.split(" ")[1],
+        process.env.JWT_API_SECRET
+      );
+      req.user = decode;
+      next();
+    } catch (error) {
+      console.log("jwt verify error");
+      req.user = undefined;
+      res.status(401).send({
+        message: error.message,
+        error: true,
+      });
+    }
   } else {
     console.log("jwt verify error");
     req.user = undefined;

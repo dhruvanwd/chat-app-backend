@@ -7,7 +7,7 @@ import { User } from "../../schema/user";
 
 export default async (req: Request, res: Response) => {
   const user = (req as any).user;
-  const contacts = await Connection.find(
+  const connectionsList = await Connection.find(
     {
       participants: user._id,
     },
@@ -16,16 +16,39 @@ export default async (req: Request, res: Response) => {
   );
 
   const connections = [];
-  for (const contact of contacts) {
-    const receiverId = contact.participants.filter((id) => id !== user._id);
-    const receiverProfile = await User.findOne(
-      { _id: receiverId },
-      { password: 0, __v: 0 }
-    );
-    connections.push({
-      ...contact.toJSON(),
-      receiverProfile: receiverProfile.toJSON(),
-    });
+  for (const contact of connectionsList) {
+    if (contact.connectionType === "one-to-one") {
+      console.log(contact);
+      const [receiverId] = contact.participants.filter((id) => id !== user._id);
+      const receiverProfile = await User.findOne(
+        { _id: receiverId },
+        { password: 0, __v: 0 }
+      );
+      if (receiverProfile) {
+        connections.push({
+          ...contact.toJSON(),
+          receiverProfile: receiverProfile.toJSON(),
+        });
+      }
+    } else {
+      const filteredParticipants = contact.participants.filter(
+        (id) => id !== user._id
+      );
+      const receiverProfiles: any[] = [];
+      for (const participantId of filteredParticipants) {
+        const userRes = await User.findOne(
+          { _id: participantId },
+          { password: 0, __v: 0 }
+        );
+        if (userRes) {
+          receiverProfiles.push(userRes.toJSON());
+        }
+      }
+      connections.push({
+        ...contact.toJSON(),
+        receiverProfiles,
+      });
+    }
   }
 
   res.status(200).send(connections);
